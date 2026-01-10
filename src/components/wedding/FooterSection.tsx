@@ -15,12 +15,6 @@ const FooterSection = () => {
           dan dijadikan-Nya di antaramu rasa kasih dan sayang."
         </p>
         <p className="text-gold text-sm font-body">— QS. Ar-Rum: 21</p>
-        
-        <div className="mt-8 pt-8 border-t border-cream/10">
-          <p className="text-cream/50 text-xs font-body flex items-center justify-center gap-1">
-            Made with <Heart className="w-3 h-3 text-gold" /> using Lovable
-          </p>
-        </div>
       </div>
     </footer>
   );
