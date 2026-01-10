@@ -5,15 +5,15 @@ import { toast } from "sonner";
 const bankAccounts = [
   {
     bank: "Bank Central Asia (BCA)",
-    accountNumber: "1234567890",
-    accountName: "Andi Pratama",
+    accountNumber: "0092 1056 42",
+    accountName: "Bayu Grafit Nur Alfian",
     icon: CreditCard,
     color: "bg-blue-500",
   },
   {
-    bank: "Bank Mandiri",
-    accountNumber: "0987654321",
-    accountName: "Sarah Amelia",
+    bank: "Sea Bank",
+    accountNumber: "9018 4770 4985",
+    accountName: "Anggi Ayu Wandari",
     icon: Wallet,
     color: "bg-gold",
   },

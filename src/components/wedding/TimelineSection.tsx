@@ -2,27 +2,22 @@ import { Heart } from "lucide-react";
 
 const timelineEvents = [
   {
-    year: "2018",
+    year: "2020",
     title: "Pertama Bertemu",
-    description: "Kami pertama kali bertemu di acara kampus, sebuah pertemuan yang tak pernah kami duga akan mengubah hidup kami.",
+    description: "Kami pertama kali bertemu di daerah semarang.",
   },
   {
-    year: "2019",
+    year: "2021",
     title: "Mulai Berpacaran",
     description: "Setelah beberapa bulan berteman, kami memutuskan untuk memulai hubungan yang lebih serius.",
   },
   {
-    year: "2021",
+    year: "2023",
     title: "Bertunangan",
     description: "Di momen yang penuh kebahagiaan, kami berkomitmen untuk melangkah ke jenjang yang lebih serius.",
   },
   {
-    year: "2023",
-    title: "Lamaran",
-    description: "Di bawah langit senja yang indah, sebuah pertanyaan penting diajukan dan dijawab dengan penuh suka cita.",
-  },
-  {
-    year: "2025",
+    year: "2026",
     title: "Menikah",
     description: "InsyaAllah, kami akan menyatukan hidup kami dalam ikatan suci pernikahan.",
   },

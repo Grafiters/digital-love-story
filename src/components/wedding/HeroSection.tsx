@@ -34,23 +34,23 @@ const HeroSection = () => {
         <div className="gold-divider mb-8" />
         
         <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-cream font-light tracking-wide mb-4">
-          Andi
+          Grafit
         </h1>
         
         <p className="text-gold text-3xl font-display italic mb-4">&</p>
         
         <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-cream font-light tracking-wide mb-8">
-          Sarah
+          Anggi
         </h1>
         
         <div className="gold-divider mb-8" />
         
         <p className="text-cream/90 text-lg font-body font-light tracking-wide">
-          15 Februari 2025
+          31 Januari 2026
         </p>
         
         <p className="text-cream/70 text-sm font-body mt-2">
-          Hotel Grand Ballroom, Jakarta
+          Prau, Mlowokarangtalun, Kec. Pulokulon, Kab. Grobogan
         </p>
       </div>
       

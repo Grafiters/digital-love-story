@@ -16,7 +16,7 @@ const CountdownSection = () => {
     seconds: 0,
   });
 
-  const weddingDate = new Date("2025-02-15T10:00:00").getTime();
+  const weddingDate = new Date("2026-01-31T10:00:00").getTime();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -71,7 +71,7 @@ const CountdownSection = () => {
             <div className="space-y-2 text-muted-foreground text-sm">
               <div className="flex items-center justify-center gap-2">
                 <Calendar className="w-4 h-4 text-gold" />
-                <span>Sabtu, 15 Februari 2025</span>
+                <span>Sabtu, 31 Januari 2026</span>
               </div>
               <div className="flex items-center justify-center gap-2">
                 <Clock className="w-4 h-4 text-gold" />
@@ -79,7 +79,7 @@ const CountdownSection = () => {
               </div>
               <div className="flex items-center justify-center gap-2">
                 <MapPin className="w-4 h-4 text-gold" />
-                <span>Masjid Al-Ikhlas, Jakarta</span>
+                <span>Rumah Mempelai Wanita, Prau RT 02, RW 06 Mlowonkarangtalun</span>
               </div>
             </div>
           </div>
@@ -89,15 +89,15 @@ const CountdownSection = () => {
             <div className="space-y-2 text-muted-foreground text-sm">
               <div className="flex items-center justify-center gap-2">
                 <Calendar className="w-4 h-4 text-gold" />
-                <span>Sabtu, 15 Februari 2025</span>
+                <span>Sabtu, 31 Januari 2026</span>
               </div>
               <div className="flex items-center justify-center gap-2">
                 <Clock className="w-4 h-4 text-gold" />
-                <span>11:00 - 14:00 WIB</span>
+                <span>11:00 WIB - Selesi</span>
               </div>
               <div className="flex items-center justify-center gap-2">
                 <MapPin className="w-4 h-4 text-gold" />
-                <span>Hotel Grand Ballroom, Jakarta</span>
+                <span>Rumah Mempelai Wanita, Prau RT 02, RW 06 Mlowonkarangtalun</span>
               </div>
             </div>
           </div>

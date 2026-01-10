@@ -4,7 +4,7 @@ const FooterSection = () => {
   return (
     <footer className="py-12 px-6 bg-brown-900 text-cream">
       <div className="max-w-lg mx-auto text-center">
-        <h2 className="font-display text-3xl mb-2">Andi & Sarah</h2>
+        <h2 className="font-display text-3xl mb-2">Grafit & Anggi</h2>
         <p className="text-cream/60 text-sm font-body mb-6">15 Februari 2025</p>
         
         <div className="gold-divider mb-6" />
