@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
-import { Send, MessageCircle, User } from "lucide-react";
+import { Send, MessageCircle, User, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { db } from "@/lib/firebase";
+import { 
+  collection, 
+  addDoc, 
+  onSnapshot, 
+  query, 
+  orderBy, 
+  Timestamp,
+  serverTimestamp
+} from "firebase/firestore";
 
 interface Wish {
   id: string;
@@ -9,59 +19,78 @@ interface Wish {
   createdAt: Date;
 }
 
-// Demo wishes - akan diganti dengan Firebase nanti
-const demoWishes: Wish[] = [
-  {
-    id: "1",
-    name: "Budi Santoso",
-    message: "Selamat menempuh hidup baru! Semoga menjadi keluarga yang sakinah, mawaddah, warahmah. Aamiin.",
-    createdAt: new Date("2025-01-08"),
-  },
-  {
-    id: "2",
-    name: "Dewi Lestari",
-    message: "Happy wedding! Semoga langgeng sampai maut memisahkan. Best wishes untuk kalian berdua! 💕",
-    createdAt: new Date("2025-01-09"),
-  },
-  {
-    id: "3",
-    name: "Ahmad Fauzi",
-    message: "Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fi khair. Selamat ya!",
-    createdAt: new Date("2025-01-10"),
-  },
-];
-
 const WishesSection = () => {
-  const [wishes, setWishes] = useState<Wish[]>(demoWishes);
+  const [wishes, setWishes] = useState<Wish[]>([]);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Real-time listener untuk wishes dari Firestore
+  useEffect(() => {
+    const wishesRef = collection(db, "wishes");
+    const q = query(wishesRef, orderBy("createdAt", "desc"));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const wishesData: Wish[] = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name,
+          message: data.message,
+          createdAt: data.createdAt?.toDate() || new Date(),
+        };
+      });
+      setWishes(wishesData);
+      setIsLoading(false);
+    }, (error) => {
+      console.error("Error fetching wishes:", error);
+      toast.error("Gagal memuat ucapan");
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name.trim() || !message.trim()) {
+    const trimmedName = name.trim();
+    const trimmedMessage = message.trim();
+
+    if (!trimmedName || !trimmedMessage) {
       toast.error("Mohon isi nama dan pesan");
+      return;
+    }
+
+    if (trimmedName.length > 100) {
+      toast.error("Nama terlalu panjang (maksimal 100 karakter)");
+      return;
+    }
+
+    if (trimmedMessage.length > 500) {
+      toast.error("Pesan terlalu panjang (maksimal 500 karakter)");
       return;
     }
 
     setIsSubmitting(true);
 
-    // Simulasi submit - akan diganti dengan Firebase
-    setTimeout(() => {
-      const newWish: Wish = {
-        id: Date.now().toString(),
-        name: name.trim(),
-        message: message.trim(),
-        createdAt: new Date(),
-      };
+    try {
+      await addDoc(collection(db, "wishes"), {
+        name: trimmedName,
+        message: trimmedMessage,
+        createdAt: serverTimestamp(),
+      });
 
-      setWishes((prev) => [newWish, ...prev]);
       setName("");
       setMessage("");
-      setIsSubmitting(false);
       toast.success("Terima kasih atas ucapan dan doa Anda! 🎉");
-    }, 1000);
+    } catch (error) {
+      console.error("Error adding wish:", error);
+      toast.error("Gagal mengirim ucapan. Silakan coba lagi.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const formatDate = (date: Date) => {
@@ -100,6 +129,7 @@ const WishesSection = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Masukkan nama Anda"
+                maxLength={100}
                 className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors"
               />
             </div>
@@ -114,8 +144,12 @@ const WishesSection = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tulis ucapan dan doa untuk pengantin..."
                 rows={4}
+                maxLength={500}
                 className="w-full px-4 py-3 rounded-xl border border-border bg-background text-foreground font-body text-sm focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:border-secondary transition-colors resize-none"
               />
+              <p className="text-xs text-muted-foreground mt-1 text-right">
+                {message.length}/500
+              </p>
             </div>
 
             <button
@@ -124,7 +158,10 @@ const WishesSection = () => {
               className="w-full py-3 px-6 rounded-xl bg-secondary text-secondary-foreground font-body font-medium text-sm flex items-center justify-center gap-2 hover:bg-secondary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
-                <span>Mengirim...</span>
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Mengirim...</span>
+                </>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
@@ -141,38 +178,41 @@ const WishesSection = () => {
             {wishes.length} Ucapan & Doa
           </h3>
           
-          <div className="max-h-96 overflow-y-auto space-y-4 pr-2 scrollbar-hide">
-            {wishes.map((wish) => (
-              <div key={wish.id} className="wedding-card animate-fade-up">
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brown-100 flex items-center justify-center">
-                    <User className="w-5 h-5 text-brown-500" />
-                  </div>
-                  
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-2 mb-1">
-                      <h4 className="font-body font-semibold text-primary text-sm truncate">
-                        {wish.name}
-                      </h4>
-                      <span className="text-xs text-muted-foreground flex-shrink-0">
-                        {formatDate(wish.createdAt)}
-                      </span>
+          {isLoading ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="w-8 h-8 animate-spin text-secondary" />
+            </div>
+          ) : wishes.length === 0 ? (
+            <p className="text-center text-muted-foreground text-sm py-8">
+              Belum ada ucapan. Jadilah yang pertama! 💕
+            </p>
+          ) : (
+            <div className="max-h-96 overflow-y-auto space-y-4 pr-2 scrollbar-hide">
+              {wishes.map((wish) => (
+                <div key={wish.id} className="wedding-card animate-fade-up">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brown-100 flex items-center justify-center">
+                      <User className="w-5 h-5 text-brown-500" />
                     </div>
-                    <p className="text-muted-foreground text-sm font-body leading-relaxed">
-                      {wish.message}
-                    </p>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <h4 className="font-body font-semibold text-primary text-sm truncate">
+                          {wish.name}
+                        </h4>
+                        <span className="text-xs text-muted-foreground flex-shrink-0">
+                          {formatDate(wish.createdAt)}
+                        </span>
+                      </div>
+                      <p className="text-muted-foreground text-sm font-body leading-relaxed">
+                        {wish.message}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Firebase Notice */}
-        <div className="mt-8 p-4 rounded-xl bg-blue-50 border border-blue-200">
-          <p className="text-sm text-blue-700 font-body text-center">
-            💡 Untuk mengaktifkan penyimpanan ucapan dengan Firebase, silakan hubungkan ke Lovable Cloud.
-          </p>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
