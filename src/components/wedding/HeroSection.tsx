@@ -48,10 +48,6 @@ const HeroSection = () => {
         <p className="text-cream/90 text-lg font-body font-light tracking-wide">
           31 Januari 2026
         </p>
-        
-        <p className="text-cream/70 text-sm font-body mt-2">
-          Prau, Mlowokarangtalun, Kec. Pulokulon, Kab. Grobogan
-        </p>
       </div>
       
       {/* Scroll Indicator */}
